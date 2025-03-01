@@ -1,0 +1,965 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "API dokumentace aplikace",
+        "contact": {
+            "name": "API Support",
+            "email": "info@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.example.com/v1",
+            "description": "Test server"
+        }
+    ],
+    "paths": {
+        "/api/authors": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Seznam všech autorů",
+                "description": "Vrátí seznam všech autorů s možností filtrování, řazení a stránkování",
+                "operationId": "getAuthorsList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Číslo stránky",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Počet položek na stránku",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sloupec pro řazení",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "surname",
+                            "enum": [
+                                "name",
+                                "surname",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "Směr řazení",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filtrovat podle jména",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "surname",
+                        "in": "query",
+                        "description": "Filtrovat podle příjmení",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná operace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Vytvoření nového autora",
+                "description": "Vytvoří nového autora a vrátí jeho data",
+                "operationId": "storeAuthor",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "J.K."
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Rowlingová"
+                                    },
+                                    "birthdate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1965-07-31"
+                                    },
+                                    "biography": {
+                                        "type": "string",
+                                        "example": "Britská spisovatelka..."
+                                    },
+                                    "nationality": {
+                                        "type": "string",
+                                        "example": "britská"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Autor byl úspěšně vytvořen",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validační chyba"
+                    }
+                }
+            }
+        },
+        "/api/authors/{id}": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Detail autora",
+                "description": "Vrátí detailní informace o autorovi podle ID",
+                "operationId": "getAuthorById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID autora",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná operace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Autor nebyl nalezen"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Aktualizace autora",
+                "description": "Aktualizuje autora podle ID a vrátí jeho data",
+                "operationId": "updateAuthor",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID autora",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "J.K."
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Rowling"
+                                    },
+                                    "birthdate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1965-07-31"
+                                    },
+                                    "biography": {
+                                        "type": "string",
+                                        "example": "Aktualizovaná biografie..."
+                                    },
+                                    "nationality": {
+                                        "type": "string",
+                                        "example": "britská"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Autor byl úspěšně aktualizován",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Autor nebyl nalezen"
+                    },
+                    "422": {
+                        "description": "Validační chyba"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Smazání autora",
+                "description": "Smaže autora podle ID",
+                "operationId": "deleteAuthor",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID autora",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Autor byl úspěšně smazán"
+                    },
+                    "404": {
+                        "description": "Autor nebyl nalezen"
+                    }
+                }
+            }
+        },
+        "/api/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Seznam všech knih",
+                "description": "Vrátí seznam všech knih s možností filtrování, řazení a stránkování",
+                "operationId": "getBooksList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Číslo stránky",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Počet položek na stránku",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sloupec pro řazení",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "created_at",
+                            "enum": [
+                                "title",
+                                "published_at",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "Směr řazení",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "desc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Filtrovat podle názvu",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author_id",
+                        "in": "query",
+                        "description": "Filtrovat podle ID autora",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filtrovat podle ID kategorie",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná operace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Vytvoření nové knihy",
+                "description": "Vytvoří novou knihu a vrátí její data",
+                "operationId": "storeBook",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Harry Potter"
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "978-80-00-05942-8"
+                                    },
+                                    "published_at": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2022-01-15"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Popis knihy..."
+                                    },
+                                    "page_count": {
+                                        "type": "integer",
+                                        "example": 320
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "example": "cs"
+                                    },
+                                    "author_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "category_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kniha byla úspěšně vytvořena",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validační chyba"
+                    }
+                }
+            }
+        },
+        "/api/books/{id}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Detail knihy",
+                "description": "Vrátí detailní informace o knize podle ID",
+                "operationId": "getBookById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID knihy",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná operace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kniha nebyla nalezena"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Aktualizace knihy",
+                "description": "Aktualizuje knihu podle ID a vrátí její data",
+                "operationId": "updateBook",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID knihy",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Harry Potter (aktualizováno)"
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "978-80-00-05942-8"
+                                    },
+                                    "published_at": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2022-01-15"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Nový popis knihy..."
+                                    },
+                                    "page_count": {
+                                        "type": "integer",
+                                        "example": 320
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "example": "cs"
+                                    },
+                                    "author_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3
+                                        ]
+                                    },
+                                    "category_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            2,
+                                            4
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kniha byla úspěšně aktualizována",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kniha nebyla nalezena"
+                    },
+                    "422": {
+                        "description": "Validační chyba"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Smazání knihy",
+                "description": "Smaže knihu podle ID",
+                "operationId": "deleteBook",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID knihy",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Kniha byla úspěšně smazána"
+                    },
+                    "404": {
+                        "description": "Kniha nebyla nalezena"
+                    }
+                }
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Seznam všech kategorií",
+                "description": "Vrátí seznam všech kategorií s možností filtrování a řazení",
+                "operationId": "getCategoriesList",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filtrovat podle názvu",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná operace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Vytvoření nové kategorie",
+                "description": "Vytvoří novou kategorii a vrátí její data",
+                "operationId": "storeCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Fantasy"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Knihy z oblasti fantasy..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kategorie byla úspěšně vytvořena",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validační chyba"
+                    }
+                }
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Detail kategorie",
+                "description": "Vrátí detailní informace o kategorii podle ID",
+                "operationId": "getCategoryById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategorie",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná operace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategorie nebyla nalezena"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Aktualizace kategorie",
+                "description": "Aktualizuje kategorii podle ID a vrátí její data",
+                "operationId": "updateCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategorie",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Fantasy & Sci-Fi"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Aktualizovaný popis kategorie..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kategorie byla úspěšně aktualizována",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategorie nebyla nalezena"
+                    },
+                    "422": {
+                        "description": "Validační chyba"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Smazání kategorie",
+                "description": "Smaže kategorii podle ID",
+                "operationId": "deleteCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID kategorie",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Kategorie byla úspěšně smazána"
+                    },
+                    "404": {
+                        "description": "Kategorie nebyla nalezena"
+                    }
+                }
+            }
+        },
+        "/api/documentation": {
+            "get": {
+                "tags": [
+                    "Documentation"
+                ],
+                "summary": "Zobrazí dokumentaci API",
+                "operationId": "2d84ee9f7f2a652da84700c3e7f1c830",
+                "responses": {
+                    "200": {
+                        "description": "Úspěšná odpověď"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authors",
+            "description": "API pro správu autorů"
+        },
+        {
+            "name": "Books",
+            "description": "API pro správu knih"
+        },
+        {
+            "name": "Categories",
+            "description": "API pro správu kategorií"
+        },
+        {
+            "name": "Documentation",
+            "description": "Documentation"
+        }
+    ]
+}

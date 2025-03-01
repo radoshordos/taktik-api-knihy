@@ -1,0 +1,15 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - app/
+    ignoreErrors:
+        - '#uses generic trait .*HasFactory but does not specify its types: TFactory#'
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+
+
+
