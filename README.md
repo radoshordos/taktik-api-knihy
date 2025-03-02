@@ -1,66 +1,160 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Testovací úkol pro programátora - Laravel API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Úvod
+- Tento projekt je testovacím úkolem, který má demonstrovat schopnost vytvářet komplexní API pomocí frameworku Laravel.
+- Úkolem je implementovat modely, vztahy mezi nimi, CRUD operace, cachování, ochranu před přetížením, dokumentaci pomocí Swagger a základní testy.
+- Tento dokument popisuje jednotlivé části zadání a poskytuje návod k instalaci, spuštění i testování aplikace.
+- Při úkolu byly intenzivně použity bezplatné umělé inteligence **Cloude 3.7 Sonet** a **GPT-4 o3**.
 
-## About Laravel
+## Obsah dokumentace
+- [Cíl úkolu](#cíl-úkolu)
+- [Požadavky na API](#požadavky-na-api)
+    - [1. Vytvoření API](#1-vytvoření-api)
+    - [2. CRUD operace](#2-crud-operace)
+    - [3. Výstup dat ve formátu JSON](#3-výstup-dat-ve-formátu-json)
+    - [4. Implementace cachování](#4-implementace-cachování)
+    - [5. Ochrana před přetížením (rate limiting)](#5-ochrana-před-přetížením-rate-limiting)
+    - [6. Dokumentace API ve Swagger](#6-dokumentace-api-ve-swagger)
+    - [7. Základní testy](#7-základní-testy)
+- [Instalace a spuštění](#instalace-a-spuštění)
+- [Použité technologie](#použité-technologie)
+- [Další poznámky](#další-poznámky)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Vlastní zadání úkolu úkolu
+Cílem projektu je vytvořit jednoduché REST API, které:
+- Pracuje s entitami: **Book**, **Author**, **Category**, **Rating** a **Comment**.
+- Umožňuje definovat vztahy: one-to-many, many-to-many a polymorfní vztahy.
+- Poskytuje kompletní podporu pro CRUD operace.
+- Vrací data ve formátu JSON.
+- Implementuje cachování pro zrychlení odezvy.
+- Chrání API před přetížením pomocí rate limiting.
+- Má kompletní a interaktivní dokumentaci pomocí Swagger.
+- Obsahuje základní testy ověřující funkčnost endpointů.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Požadavky na API
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Vytvoření API
+- **Popis:** Vytvoření nového projektu Laravel a definice entit a jejich vztahů.
+- **Detaily:**
+    - **Modely:** Vytvořit modely pro Book, Author, Category, Rating a Comment.
+    - **Vztahy:**
+        - *Book* může mít více *Authorů* (many-to-many).
+        - *Author* může napsat více *Booků* (many-to-many).
+        - *Book* může patřit do více *Category* (many-to-many).
+        - *Rating* a *Comment* mají polymorfní vztahy, které umožňují, aby se vztahovaly jak ke knihám, tak k autorům.
+- **Poznámka:** Důležité je správně nastavit databázové migrace a případné seed soubory pro testovací data, a factory s použitím faker třídy.
 
-## Learning Laravel
+ ```text
+1 Modely
+php artisan make:model Book
+php artisan make:model Author
+php artisan make:model Category
+php artisan make:model Rating
+php artisan make:model Comment
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2 Migrace
+php artisan make:migration books
+php artisan make:migration authors
+php artisan make:migration categories
+php artisan make:migration ratings
+php artisan make:migration comments
+php artisan make:migration book_category
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+3 API Controlery
+php artisan make:controller Api/BookController --api
+php artisan make:controller Api/AuthorController --api
+php artisan make:controller Api/CategoryController --api
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4 API Resources
+php artisan make:resource BookResource
+php artisan make:resource AuthorResource
+php artisan make:resource CategoryResource
+php artisan make:resource RatingResource
+php artisan make:resource CommentResource
 
-## Laravel Sponsors
+5 Validační požadavky
+php artisan make:request BookRequest
+php artisan make:request AuthorRequest
+php artisan make:request CategoryRequest
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+5 Factory
+php artisan make:factory BookFactory --model=Book
+php artisan make:factory AuthorFactory --model=Author
+php artisan make:factory CategoryFactory --model=Category
+php artisan make:factory RatingFactory --model=Rating
+php artisan make:factory CommentFactory --model=Comment
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```
 
-## Contributing
+### 2. CRUD operace
+- **Popis:** Implementace základních operací pro správu dat.
+- **Detaily:**
+    - API musí podporovat operace **GET**, **POST**, **PUT** a **DELETE** pro všechny modely.
+    - Endpointy by měly umožnit filtrování, řazení, stránkování a případně i groupování výsledků.
+- **Poznámka:** Každá operace musí být pečlivě navržena tak, aby byla odpověď konzistentní a ve formátu JSON.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```text
+php .\artisan route:list
+```
+![swagger](resources/readme.md/route-list.png)
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Výstup dat ve formátu JSON
+- **Popis:** Veškeré odpovědi API musí být ve formátu JSON.
+- **Detaily:**
+    - Data z endpointů musí obsahovat všechny relevantní informace o modelech a jejich vztazích.
+    - Validace vstupních dat a chybová hlášení rovněž musí být zpracovávána a vracena jako JSON.
+- **Poznámka:** Tento přístup zajišťuje snadnou integraci API s front-end aplikacemi a dalšími službami.
 
-## Security Vulnerabilities
+### 4. Implementace cachování
+- **Popis:** Zavedení cachovací vrstvy pro zvýšení výkonu API.
+- **Detaily:**
+    - Vybrat alespoň jeden endpoint, kde bude implementováno cachování (např. načítání seznamu knih).
+    - Použít Laravel Cache – ideálně s Redis nebo jiným vhodným cache driverem.
+    - Nastavit expiraci a správnou invalidaci cache, aby se zajistilo aktuální zobrazení dat.
+- **Poznámka:** Cachování pomáhá zkrátit dobu odezvy a snížit zatížení databáze.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Ochrana před přetížením (rate limiting)
+- **Popis:** Implementace ochrany API před zneužitím a DoS útoky.
+- **Detaily:**
+    - Nastavit omezení počtu požadavků na jednoho uživatele (např. maximálně 60 požadavků za minutu).
+    - Využít vestavěnou funkcionalitu Laravelu pro rate limiting.
+- **Poznámka:** Tato ochrana zajišťuje, že API zůstane dostupné i při vysoké zátěži a pomáhá předcházet útokům.
 
-## License
+![rate-limiter](resources/readme.md/rate-limiter.png)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 6. Dokumentace API ve Swagger
+- **Popis:** Vytvoření a zpřístupnění dokumentace API pomocí Swagger (OpenAPI).
+- **Detaily:**
+    - Dokumentace musí popisovat všechny endpointy, metody, parametry a strukturu odpovědí.
+    - Dokumentaci zpřístupnit přes specifický endpoint, například `GET /api/documentation`.
+- **Poznámka:** Swagger dokumentace umožňuje ostatním vývojářům snadno pochopit, jak API funguje, a usnadňuje integraci.
+
+![swagger](resources/readme.md/swagger.png)
+
+### 7. Základní testy ověřující funkčnost
+- **Popis:** Vytvoření automatizovaných testů pro ověření funkčnosti API.
+- **Detaily:**
+    - Použít PHPUnit nebo Laravel testing framework.
+    - Testy by měly ověřovat funkčnost jednotlivých endpointů, validaci vstupních dat a správnost odpovědí.
+- **Poznámka:** Testy jsou klíčové pro udržení kvality kódu a usnadňují budoucí úpravy a refaktorizaci.
+
+## Instalace a spuštění
+
+### Požadavky
+- **PHP 8.4**
+- **Docker a Docker Compose**
+- **Composer**
+- **Laravel 12**
+- **Databáze:** MySQL
+- **Larastan** na levelu 8
+
+### Instalace projektu
+1. **Klonování repozitáře:**
+   ```bash
+   git clone https://github.com/radoshordos/taktik-api-knihy.git
+   cd taktik-api-knihy
+   php artisan migrate
+
+

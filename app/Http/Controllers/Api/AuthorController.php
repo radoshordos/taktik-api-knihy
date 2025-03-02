@@ -164,7 +164,6 @@ class AuthorController extends Controller
     public function store(AuthorRequest $request): AuthorResource
     {
         $author = Author::create($request->validated());
-
         return new AuthorResource($author);
     }
 
@@ -251,7 +250,6 @@ class AuthorController extends Controller
     public function update(AuthorRequest $request, Author $author): AuthorResource
     {
         $author->update($request->validated());
-
         return new AuthorResource($author);
     }
 
@@ -283,7 +281,6 @@ class AuthorController extends Controller
     public function destroy(Author $author): Response
     {
         $author->delete();
-
         return response()->noContent();
     }
 }

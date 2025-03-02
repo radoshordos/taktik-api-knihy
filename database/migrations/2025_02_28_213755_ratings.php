@@ -8,7 +8,7 @@ return new class extends Migration {
 
     public function up(): void
     {
-        Schema::create('ratings', function (Blueprint $table) {
+        Schema::create('ratings', static function (Blueprint $table) {
             $table->id();
             $table->integer('score');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();

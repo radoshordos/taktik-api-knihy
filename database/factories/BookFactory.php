@@ -14,8 +14,8 @@ class BookFactory extends Factory
     {
         return [
             'title'        => $this->faker->word(),
-            'isbn'         => $this->faker->word(),
-            'published_at' => Carbon::now(),
+            'isbn'         => $this->faker->unique()->isbn13(),
+            'published_at' => $this->faker->date(),
             'description'  => $this->faker->text(),
             'page_count'   => $this->faker->randomNumber(),
             'language'     => $this->faker->word(),

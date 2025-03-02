@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "laravel/laravel",
     "type": "project",
-    "description": "Úkol taktik-api-knihy",
+    "description": "Úkol taktik-api-knihy, více v README.md",
     "keywords": [
         "laravel",
         "framework"

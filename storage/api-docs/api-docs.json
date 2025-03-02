@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "https://api.example.com/v1",
+            "url": "https://localhost/",
             "description": "Test server"
         }
     ],

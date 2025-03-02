@@ -15,7 +15,7 @@ use OpenApi\Attributes as OA;
     )
 )]
 #[OA\Server(
-    url: 'https://api.example.com/v1',
+    url: 'http://localhost/',
     description: 'Test server'
 )]
 #[OA\SecurityScheme(
