@@ -44,6 +44,7 @@ Cílem projektu je vytvořit jednoduché REST API, které:
         - *Rating* a *Comment* mají polymorfní vztahy, které umožňují, aby se vztahovaly jak ke knihám, tak k autorům.
 - **Poznámka:** Důležité je správně nastavit databázové migrace a případné seed soubory pro testovací data, a factory s použitím faker třídy.
 
+
  ```text
 1 Modely
 php artisan make:model Book
@@ -83,9 +84,9 @@ php artisan make:factory AuthorFactory --model=Author
 php artisan make:factory CategoryFactory --model=Category
 php artisan make:factory RatingFactory --model=Rating
 php artisan make:factory CommentFactory --model=Comment
-
-
 ```
+
+![img.png](resources/readme.md/migrate.png)
 
 ### 2. CRUD operace
 - **Popis:** Implementace základních operací pro správu dat.
@@ -111,7 +112,7 @@ php .\artisan route:list
 - **Popis:** Zavedení cachovací vrstvy pro zvýšení výkonu API.
 - **Detaily:**
     - Vybrat alespoň jeden endpoint, kde bude implementováno cachování (např. načítání seznamu knih).
-    - Použít Laravel Cache – ideálně s Redis nebo jiným vhodným cache driverem.
+    - Použít Laravel Cache.
     - Nastavit expiraci a správnou invalidaci cache, aby se zajistilo aktuální zobrazení dat.
 - **Poznámka:** Cachování pomáhá zkrátit dobu odezvy a snížit zatížení databáze.
 
@@ -136,9 +137,11 @@ php .\artisan route:list
 ### 7. Základní testy ověřující funkčnost
 - **Popis:** Vytvoření automatizovaných testů pro ověření funkčnosti API.
 - **Detaily:**
-    - Použít PHPUnit nebo Laravel testing framework.
+    - Použít Laravel testing framework.
     - Testy by měly ověřovat funkčnost jednotlivých endpointů, validaci vstupních dat a správnost odpovědí.
 - **Poznámka:** Testy jsou klíčové pro udržení kvality kódu a usnadňují budoucí úpravy a refaktorizaci.
+
+![img.png](resources/readme.md/testing.png)
 
 ## Instalace a spuštění
 
@@ -149,6 +152,17 @@ php .\artisan route:list
 - **Laravel 12**
 - **Databáze:** MySQL
 - **Larastan** na levelu 8
+
+### Instalace dockeru
+
+```text
+docker-compose up -d
+```
+Přístup k aplikaci:
+
+- PHP aplikace by měla být dostupná na http://localhost:8080.
+- MySQL server je dostupný na localhost:3306 pro připojení.
+
 
 ### Instalace projektu
 1. **Klonování repozitáře:**
