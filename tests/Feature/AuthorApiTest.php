@@ -81,6 +81,15 @@ class AuthorApiTest extends TestCase
         ]);
     }
 
+    public function test_get_non_existent_author_returns_404(): void
+    {
+        // Pokus o načtení neexistujícího autora
+        $response = $this->getJson(route('authors.show', ['author' => 99999]));
+
+        // Očekáváme, že API vrátí 404
+        $response->assertStatus(404);
+    }
+
     public function test_can_update_author(): void
     {
         // Vytvoření autora
@@ -115,6 +124,32 @@ class AuthorApiTest extends TestCase
         ]);
     }
 
+    public function test_create_author_with_invalid_data_returns_validation_errors(): void
+    {
+        // Odeslání prázdných dat, kdy povinné hodnoty chybí
+        $response = $this->postJson(route('authors.store'), []);
+
+        // Ověření, že API vrátí 422 a chybová hlášení pro povinná pole
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['name', 'surname']);
+    }
+
+
+    public function test_update_non_existent_author_returns_404(): void
+    {
+        // Data pro aktualizaci, kdy autor neexistuje
+        $updateData = [
+            'name'    => 'Test',
+            'surname' => 'Testovský'
+        ];
+
+        // Pokus o aktualizaci neexistujícího autora
+        $response = $this->putJson(route('authors.update', ['author' => 999]), $updateData);
+
+        // Ověření, že API vrátí 404
+        $response->assertStatus(404);
+    }
+
     public function test_can_delete_author(): void
     {
         // Vytvoření autora
@@ -131,4 +166,14 @@ class AuthorApiTest extends TestCase
             'id' => $author->id
         ]);
     }
+
+    public function test_delete_non_existent_author_returns_404(): void
+    {
+        // Pokus o smazání neexistujícího autora
+        $response = $this->deleteJson(route('authors.destroy', ['author' => 99999]));
+
+        // Ověření, že API vrátí 404
+        $response->assertStatus(404);
+    }
+
 }
