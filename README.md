@@ -124,6 +124,7 @@ php .\artisan route:list
 - **Poznámka:** Tato ochrana zajišťuje, že API zůstane dostupné i při vysoké zátěži a pomáhá předcházet útokům.
 
 ![rate-limiter](resources/readme.md/rate-limiter.png)
+![rate-limiter](resources/readme.md/limiter.png)
 
 ### 6. Dokumentace API ve Swagger
 - **Popis:** Vytvoření a zpřístupnění dokumentace API pomocí Swagger (OpenAPI).
@@ -160,9 +161,7 @@ docker-compose up -d
 ```
 Přístup k aplikaci:
 
-- PHP aplikace by měla být dostupná na http://localhost:8080.
-- MySQL server je dostupný na localhost:3306 pro připojení.
-
+- PHP aplikace by měla být dostupná na http://localhost.
 
 ### Instalace projektu
 1. **Klonování repozitáře:**
