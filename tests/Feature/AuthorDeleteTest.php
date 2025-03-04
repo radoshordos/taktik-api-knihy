@@ -1,7 +1,10 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\Author;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class AuthorDeleteTest extends TestCase
@@ -17,7 +20,7 @@ class AuthorDeleteTest extends TestCase
         $response = $this->deleteJson('/api/authors/' . $author->id);
 
         // Ověření odpovědi
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
 
         // Ověření, že autor byl smazán
         $this->assertDatabaseMissing('authors', [
@@ -27,11 +30,7 @@ class AuthorDeleteTest extends TestCase
 
     public function test_delete_non_existent_author_returns_404(): void
     {
-        // Pokus o smazání neexistujícího autora
         $response = $this->deleteJson(route('authors.destroy', ['author' => 99999]));
-
-        // Ověření, že API vrátí 404
-        $response->assertStatus(404);
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
-
 }

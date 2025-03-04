@@ -123,7 +123,7 @@ php .\artisan route:list
     - Využít vestavěnou funkcionalitu Laravelu pro rate limiting.
 - **Poznámka:** Tato ochrana zajišťuje, že API zůstane dostupné i při vysoké zátěži a pomáhá předcházet útokům.
 
-![rate-limiter](resources/readme.md/rate-limiter.png)
+![rate-limiter](resources/readme.md/test-ratelimit.png)
 ![rate-limiter](resources/readme.md/limiter.png)
 
 ### 6. Dokumentace API ve Swagger

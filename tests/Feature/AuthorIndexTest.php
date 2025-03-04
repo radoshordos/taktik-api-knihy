@@ -1,4 +1,5 @@
 <?php
+namespace Tests\Feature;
 
 use App\Models\Author;
 use Illuminate\Foundation\Testing\RefreshDatabase;
